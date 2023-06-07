@@ -8,19 +8,26 @@ const TextField = ({
   placeholder,
   error,
 }) => {
-  return (
-    <div>
-      <label htmlFor={name}>{label} </label>
-      <input
-        id={name}
-        name={name}
-        value={value}
-        placeholder={placeholder}
-        type={type}
-        onChange={onChange}
-      />
+  const getInputClass = () => {
+    return "form-control" + (error ? " is-invalid" : "");
+  };
 
-      {error && <p>{error}</p>}
+  return (
+    <div className="mb-4">
+      <label htmlFor={name}>{label} </label>
+      <div className="input-group has-validation">
+        <input
+          id={name}
+          name={name}
+          value={value}
+          placeholder={placeholder}
+          type={type}
+          onChange={onChange}
+          className={getInputClass()}
+        />
+
+        {error && <div className="invalid-feedback">{error}</div>}
+      </div>
     </div>
   );
 };

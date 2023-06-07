@@ -1,5 +1,5 @@
-import { isRequired } from "./validateRules";
-
+// import { isContainDigit, isEmail, isRequired, min } from "./validateRules";
+import validateRules from './validateRules';
 export const validate = (values, config) => {
     const errors = {}
 
@@ -9,9 +9,10 @@ export const validate = (values, config) => {
 
         for (const rule in validationResult) {
 
-            const { message } = validationResult[rule]
+            const { message, value } = validationResult[rule]
+            const validator = validateRules[rule]
 
-            const hasError = !validator(rule, values[name])
+            const hasError = validator && !validator(values[name], value)
             if (hasError) {
                 errors[name] = message
             }
@@ -19,18 +20,26 @@ export const validate = (values, config) => {
 
     }
 
+
+    // function validator(ruleName, value, param) {
+    //     switch (ruleName) {
+    //         case "isRequired":
+    //             return isRequired(value)
+    //         case "isEmail":
+    //             return isEmail(value)
+    //         case "isContainDigit":
+    //             return isContainDigit(value)
+    //         case 'min':
+    //             return min(value, param)
+
+    //         default:
+    //             break;
+    //     }
+
+    // }
+
     return errors
 
 }
 
 
-const validator = (ruleName, value) => {
-    switch (ruleName) {
-        case "isRequired":
-            return isRequired(value)
-
-        default:
-            break;
-    }
-
-}
