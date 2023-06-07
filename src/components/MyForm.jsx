@@ -1,4 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import TextField from "./TextField";
+import { validate } from "../utils/validator";
 
 const MyForm = () => {
   const [data, setData] = useState({
@@ -6,6 +8,7 @@ const MyForm = () => {
     password: "",
     description: "",
   });
+  const [error, setError] = useState({});
 
   const onSubmit = (event) => {
     event.preventDefault();
@@ -24,44 +27,69 @@ const MyForm = () => {
     }));
   };
 
+  const validationSchema = {
+    email: {
+      isRequired: {
+        message: "Электронаая почта обязательна к заполнению",
+      },
+    },
+    password: {
+      isRequired: {
+        message: "password обязателен к заполнению",
+      },
+    },
+    description: {
+      isRequired: {
+        message: "description обязателен к заполнению",
+      },
+    },
+  };
+
+  useEffect(() => {
+    const error = validate(data, validationSchema);
+    setError(error);
+  }, [data]);
+
   const { email, password, description } = data;
 
   return (
-    <form onSubmit={onSubmit}>
-      <div>
-        <label htmlFor="email">Email </label>
-        <input
-          id="email"
+    <div>
+      <form onSubmit={onSubmit}>
+        <TextField
           name="email"
           value={email}
+          label="Email"
+          onChange={handleChange}
+          id="email"
+          type="text"
           placeholder="enter email"
-          onChange={handleChange}
+          error={error.email}
         />
-      </div>
 
-      <div>
-        <label htmlFor="password">Password</label>
-        <input
-          id="password"
+        <TextField
           name="password"
-          placeholder="enter password"
           value={password}
+          label="Password"
           onChange={handleChange}
+          id="password"
+          type="password"
+          placeholder="enter password"
+          error={error.password}
         />
-      </div>
-      <div>
-        <label htmlFor="description">Описание</label>
-        <input
-          id="description"
+        <TextField
           name="description"
-          placeholder="enter description"
           value={description}
+          label="description"
           onChange={handleChange}
+          id="description"
+          type="text"
+          placeholder="enter description"
+          error={error.description}
         />
-      </div>
 
-      <button type="submit"> Submit </button>
-    </form>
+        <button type="submit"> Submit </button>
+      </form>
+    </div>
   );
 };
 
