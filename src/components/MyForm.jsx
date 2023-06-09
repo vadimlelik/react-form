@@ -1,16 +1,26 @@
 import { useEffect, useState } from "react";
 import TextField from "./TextField";
 import { validate } from "../utils/validator";
+import Select from "./Select";
+
+const deliveryList = [
+  { label: "Пункт Выдачи", value: "1" },
+  { label: " Обычная доставка", value: "2" },
+  { label: "Экспресс доставка", value: "3" },
+];
 
 const MyForm = () => {
   const [data, setData] = useState({
     email: "",
     password: "",
     description: "",
+    deliveryType: "",
   });
   const [error, setError] = useState({});
 
   const isValid = Object.keys(error).length === 0;
+
+  console.log(data);
 
   const onSubmit = (event) => {
     event.preventDefault();
@@ -57,6 +67,11 @@ const MyForm = () => {
         message: "description обязателен к заполнению",
       },
     },
+    deliveryType: {
+      isRequired: {
+        message: "deliveryType обязателен к заполнению",
+      },
+    },
   };
 
   useEffect(() => {
@@ -64,7 +79,7 @@ const MyForm = () => {
     setError(error);
   }, [data]);
 
-  const { email, password, description } = data;
+  const { email, password, description, deliveryType } = data;
 
   return (
     <div className="container mt-5">
@@ -101,6 +116,15 @@ const MyForm = () => {
               type="text"
               placeholder="enter description"
               error={error.description}
+            />
+            <Select
+              onChange={handleChange}
+              value={deliveryType}
+              name="deliveryType"
+              options={deliveryList}
+              defaultValue="Выберите вариант ...."
+              error={error.deliveryType}
+              label="Выберите доставку"
             />
 
             <button
